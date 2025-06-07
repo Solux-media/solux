@@ -208,73 +208,231 @@
 })();
 
 document.addEventListener('DOMContentLoaded', function() {
-  const serviceLinks = document.querySelectorAll('[data-bs-toggle="modal"][data-service]');
-  const modal = document.getElementById('serviceModal');
+  const serviceModal = document.getElementById('serviceModal');
   
-  if (modal) {
-    modal.addEventListener('show.bs.modal', function(event) {
-      const trigger = event.relatedTarget;
-      const serviceNumber = trigger.getAttribute('data-service');
+  if (serviceModal) {
+    serviceModal.addEventListener('show.bs.modal', function(event) {
+      const button = event.relatedTarget;
+      const serviceId = button.getAttribute('data-service');
+      const serviceItem = button.closest('.service-item');
       
-      // Reset all active classes
-      document.querySelectorAll('[class*="service-card-"], [class*="service-content-"]').forEach(el => {
-        el.classList.remove('active');
+      // Définir l'ID du service sur le modal
+      serviceModal.setAttribute('data-service', serviceId);
+      
+      // Récupérer les données du service
+      const title = serviceItem.querySelector('h3').textContent;
+      const description = serviceItem.querySelector('p').textContent;
+      const iconClass = serviceItem.querySelector('i').className;
+      
+      // Mettre à jour le modal
+      serviceModal.querySelector('.modal-title-text').textContent = title;
+      serviceModal.querySelector('.modal-description').textContent = description;
+      serviceModal.querySelector('.modal-icon').className = `modal-icon ${iconClass}`;
+      
+      // Générer le contenu dynamique en fonction du service
+      const featuresGrid = serviceModal.querySelector('.features-grid');
+      featuresGrid.innerHTML = '';
+      
+      // Données pour chaque service (vous pouvez les personnaliser)
+      const serviceData = {
+        '1': [
+          { icon: 'bi bi-brush', title: 'Logo Design', description: 'Création de logos uniques et mémorables' },
+          { icon: 'bi bi-palette', title: 'Charte Graphique', description: 'Développement d\'une identité visuelle cohérente' },
+          { icon: 'bi bi-card-image', title: 'Print Design', description: 'Conception de supports imprimés professionnels' },
+          { icon: 'bi bi-easel', title: 'Illustration', description: 'Création d\'illustrations personnalisées' }
+        ],
+        '2': [
+          { icon: 'bi bi-camera-video', title: 'Vidéos', description: 'Production vidéo professionnelle' },
+          { icon: 'bi bi-camera', title: 'Photographie', description: 'Séances photo et retouches' },
+          { icon: 'bi bi-mic', title: 'Podcasts', description: 'Production et montage audio' },
+          { icon: 'bi bi-file-earmark-play', title: 'Motion Design', description: 'Animations et vidéos explicatives' }
+        ],
+        '3': [
+          { icon: 'bi bi-lightbulb', title: 'Stratégie', description: 'Planification stratégique sur mesure' },
+          { icon: 'bi bi-people', title: 'Branding', description: 'Développement de votre marque' },
+          { icon: 'bi bi-graph-up', title: 'Marketing', description: 'Stratégies marketing innovantes' },
+          { icon: 'bi bi-megaphone', title: 'Communication', description: 'Plans de communication efficaces' }
+        ],
+        '4': [
+          { icon: 'bi bi-globe', title: 'Sites Web', description: 'Développement de sites vitrines' },
+          { icon: 'bi bi-cart', title: 'E-commerce', description: 'Boutiques en ligne performantes' },
+          { icon: 'bi bi-laptop', title: 'Applications Web', description: 'Solutions web sur mesure' },
+          { icon: 'bi bi-search', title: 'SEO', description: 'Optimisation pour les moteurs de recherche' }
+        ],
+        '5': [
+          { icon: 'bi bi-phone', title: 'Apps Mobiles', description: 'Applications iOS et Android' },
+          { icon: 'bi bi-google', title: 'Google Profil', description: 'Optimisation de votre présence Google' },
+          { icon: 'bi bi-server', title: 'Hébergement', description: 'Solutions cloud sécurisées' },
+          { icon: 'bi bi-shield-lock', title: 'Sécurité', description: 'Protection de vos données' }
+        ]
+      };
+      
+      // Ajouter les cartes avec des animations aléatoires
+      const animations = ['animate-fade', 'animate-zoom', 'animate-slide'];
+      serviceData[serviceId].forEach((feature, index) => {
+        const animationClass = animations[index % animations.length];
+        
+        const card = document.createElement('div');
+        card.className = `feature-card ${animationClass}`;
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.innerHTML = `
+          <i class="${feature.icon}"></i>
+          <h4>${feature.title}</h4>
+          <p>${feature.description}</p>
+        `;
+        featuresGrid.appendChild(card);
       });
-      
-      // Hide all service icons and titles
-      document.querySelectorAll('.service-icon').forEach(icon => {
-        icon.classList.add('d-none');
-      });
-      document.querySelectorAll('[class*="service-title-"]').forEach(title => {
-        title.classList.add('d-none');
-      });
-      
-      // Activate selected service card
-      const activeCard = document.querySelector(`.service-card-${serviceNumber}`);
-      if (activeCard) activeCard.classList.add('active');
-      
-      // Activate corresponding content
-      document.querySelectorAll(`.service-content-${serviceNumber}`).forEach(el => {
-        el.classList.add('active');
-      });
-      
-      // Show correct icon
-      const activeIcon = document.querySelector(`.service-icon[data-service="${serviceNumber}"]`);
-      if (activeIcon) activeIcon.classList.remove('d-none');
-      
-      // Show correct title
-      const activeTitle = document.querySelector(`.service-title-${serviceNumber}`);
-      if (activeTitle) activeTitle.classList.remove('d-none');
-      
-      // Update right side content theme
-      updateRightSideTheme(serviceNumber);
-    });
-  }
-  
-  function updateRightSideTheme(serviceNumber) {
-    // Remove all theme classes first
-    document.querySelectorAll('.feature-box').forEach(box => {
-      box.classList.remove(
-        'theme-red', 'theme-blue', 'theme-green', 
-        'theme-purple', 'theme-orange'
-      );
     });
     
-    // Add appropriate theme class
-    const themeClass = getThemeClass(serviceNumber);
-    document.querySelectorAll(`.service-content-${serviceNumber}`).forEach(el => {
-      el.classList.add(themeClass);
+    // Réinitialiser les animations lorsque le modal est fermé
+    serviceModal.addEventListener('hidden.bs.modal', function() {
+      serviceModal.removeAttribute('data-service');
     });
   }
+});
+
+// Gestion du modal Packages
+document.addEventListener('DOMContentLoaded', function() {
+  const packagesModal = document.getElementById('packagesModal');
   
-  function getThemeClass(serviceNumber) {
-    switch(serviceNumber) {
-      case '1': return 'theme-red';
-      case '2': return 'theme-blue';
-      case '3': return 'theme-green';
-      case '4': return 'theme-purple';
-      case '5': return 'theme-orange';
-      default: return 'theme-red';
+  if (packagesModal) {
+    const quizSteps = packagesModal.querySelectorAll('.quiz-step');
+    const progressBar = packagesModal.querySelector('.progress-bar');
+    const nextBtn = packagesModal.querySelector('.next-btn');
+    const prevBtn = packagesModal.querySelector('.prev-btn');
+    let currentStep = 1;
+    
+    // Initialisation
+    updateProgress();
+    
+    // Gestion des boutons
+    nextBtn.addEventListener('click', function() {
+      if (currentStep < quizSteps.length) {
+        goToStep(currentStep + 1);
+      } else {
+        // Soumettre le formulaire
+        submitPackageForm();
+      }
+    });
+    
+    prevBtn.addEventListener('click', function() {
+      if (currentStep > 1) {
+        goToStep(currentStep - 1);
+      }
+    });
+    
+    function goToStep(step) {
+      quizSteps.forEach(s => s.classList.remove('active'));
+      packagesModal.querySelector(`.quiz-step[data-step="${step}"]`).classList.add('active');
+      currentStep = step;
+      
+      // Mettre à jour les boutons
+      prevBtn.disabled = step === 1;
+      nextBtn.innerHTML = step === quizSteps.length 
+        ? 'Voir les résultats <i class="bi bi-check-circle ms-2"></i>' 
+        : 'Suivant <i class="bi bi-chevron-right ms-2"></i>';
+      
+      updateProgress();
+    }
+    
+    function updateProgress() {
+      const progress = (currentStep / quizSteps.length) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+    
+    function submitPackageForm() {
+      // Récupérer les réponses
+      const answers = {
+        stage: packagesModal.querySelector('input[name="stage"]:checked')?.value,
+        // Ajouter les autres réponses
+      };
+      
+      // Afficher les packages recommandés (simulation)
+      const recommended = packagesModal.querySelector('.recommended-packages');
+      recommended.innerHTML = `
+        <div class="col-md-6 mb-4">
+          <div class="card h-100 border-primary">
+            <div class="card-body">
+              <h4 class="card-title text-primary">Starter Pack</h4>
+              <p class="card-text">Parfait pour les nouveaux projets avec un budget limité.</p>
+              <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item">Consultation initiale</li>
+                <li class="list-group-item">Analyse de marché</li>
+                <li class="list-group-item">Plan d'action</li>
+              </ul>
+              <button class="btn btn-outline-primary w-100">Choisir ce package</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="card h-100 border-success">
+            <div class="card-body">
+              <h4 class="card-title text-success">Business Pack</h4>
+              <p class="card-text">Solution complète pour les projets en croissance.</p>
+              <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item">Stratégie complète</li>
+                <li class="list-group-item">Design & Développement</li>
+                <li class="list-group-item">Support 3 mois</li>
+              </ul>
+              <button class="btn btn-outline-success w-100">Choisir ce package</button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      goToStep(quizSteps.length); // Aller à la dernière étape
     }
   }
+  
+  // Activer le lien "En savoir plus" pour Packages
+  document.querySelector('.service-item h3:contains("Packages")')?.closest('.service-item')
+    .querySelector('.service-link')
+    .setAttribute('data-bs-toggle', 'modal')
+    .setAttribute('data-bs-target', '#packagesModal');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const phrases = [
+    "expériences mémorables",
+    "solutions innovantes",
+    "résultats exceptionnels"
+  ];
+  const element = document.querySelector('.rotating-text');
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typingSpeed = 100;
+  let pauseBetweenPhrases = 2000;
+
+  function typeWriter() {
+    const currentPhrase = phrases[phraseIndex];
+    
+    if (isDeleting) {
+      // Deleting characters
+      element.textContent = currentPhrase.substring(0, charIndex - 1);
+      charIndex--;
+      typingSpeed = 50; // Faster when deleting
+    } else {
+      // Typing characters
+      element.textContent = currentPhrase.substring(0, charIndex + 1);
+      charIndex++;
+      typingSpeed = 100;
+    }
+
+    if (!isDeleting && charIndex === currentPhrase.length) {
+      // Pause at end of phrase
+      typingSpeed = pauseBetweenPhrases;
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      // Move to next phrase
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      typingSpeed = 500; // Pause before starting next phrase
+    }
+
+    setTimeout(typeWriter, typingSpeed);
+  }
+
+  // Start the animation
+  typeWriter();
 });
