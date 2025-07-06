@@ -828,7 +828,7 @@ section,
   font-weight: 600;
 }
 
-.php-email-form .sent-message {
+.email-form .sent-message {
   display: none;
   color: #ffffff;
   background: #059652;
