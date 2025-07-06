@@ -1878,6 +1878,7 @@ section,
   }
 }
 
+
 /*--------------------------------------------------------------
 # Contact Section
 --------------------------------------------------------------*/
@@ -1923,6 +1924,61 @@ section,
   font-size: 15px;
   line-height: 1.6;
 }
+
+.contact .form-wrapper .input-group .input-group-text {
+  color: var(--accent-color);
+  background-color: color-mix(in srgb, var(--default-color), transparent 96%);
+  border-color: color-mix(in srgb, var(--default-color), transparent 85%);
+  border-radius: 8px 0 0 8px;
+  padding: 12px 15px;
+}
+
+.contact .form-wrapper .input-group .form-control {
+  color: var(--default-color);
+  background-color: var(--surface-color);
+  border-radius: 0 8px 8px 0;
+  box-shadow: none;
+  font-size: 14px;
+  border-color: color-mix(in srgb, var(--default-color), transparent 85%);
+  padding: 12px 15px;
+}
+
+.contact .form-wrapper .input-group .form-control:focus {
+  border-color: var(--accent-color);
+}
+
+.contact .form-wrapper .input-group .form-control::placeholder {
+  color: color-mix(in srgb, var(--default-color), transparent 70%);
+}
+
+.contact .form-wrapper select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  padding-right: 40px;
+}
+
+.contact .form-wrapper textarea.form-control {
+  min-height: 160px;
+}
+
+.contact .form-wrapper button {
+  background-color: var(--accent-color);
+  border: 0;
+  padding: 12px 40px;
+  color: var(--contrast-color);
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.contact .form-wrapper button:hover {
+  background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+}
+
 
 /*--------------------------------------------------------------
 # Flex box services
